@@ -4,80 +4,91 @@
 * Emacs Configuration
 ** Basic UI configuration
    #+begin_src emacs-lisp
-		 (defvar runemacs/default-font-size 140)
-		 (setq inhibit-startup-message t)
+     (defvar runemacs/default-font-size 170)
+     (setq inhibit-startup-message t)
 
-		 (scroll-bar-mode -1)
-		 (tool-bar-mode -1)
-		 (tooltip-mode -1)
-		 (set-fringe-mode 10)
-		 (setq visible-bell t)
-		 (global-prettify-symbols-mode 1)
-		 (global-hl-line-mode 1)
+     (scroll-bar-mode -1)
+     (tool-bar-mode -1)
+     (tooltip-mode -1)
+     (set-fringe-mode 10)
+     (setq visible-bell t)
+     (global-prettify-symbols-mode 1)
+     (global-hl-line-mode 1)
 
+     (highlight-indent-guides-mode)
+
+   #+end_src
+
+   #+RESULTS:
+	 : t
+   
+** Package configuration
+   #+begin_src emacs-lisp
+     (require 'package)
+     (add-to-list 'package-archives
+		  '("melpa" . "https://melpa.org/packages/") t)
+     (package-initialize)
+
+     ;; Bootstrap 'use-package'
+     (eval-after-load 'gnutls
+       '(add-to-list 'gnutls-trustfiles "/etc/ssl/cert.pem"))
+     (unless (package-installed-p 'use-package)
+       (package-refresh-contents)
+       (package-install 'use-package))
+     (eval-when-compile
+       (require 'use-package))
+     (require 'bind-key)
+     (setq use-package-always-ensure t)
    #+end_src
 
 	 #+RESULTS:
 	 : t
 
-** Package configuration
-   #+begin_src emacs-lisp
-     (require 'package)
-
-     ;; ELPA and MELPA
-     (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-     (package-initialize)
-
-     (setq package-enable-at-startup nil)
-     (require 'use-package)
-     (setq use-package-always-ensure t)
-     (setq use-package-verbose nil)
-   #+end_src
-
-	 #+RESULTS:
-
 ** Basic Configuration
    #+begin_src emacs-lisp
-		 (use-package gcmh
-			 :diminish gcmh-mode
-			 :config
-			 (setq gcmh-idle-delay 5
-						 gcmh-high-cons-threshold (* 16 1024 1024)) ;; this represets 16mb
-			 (gcmh-mode 1))
-		 (add-hook 'emacs-startup-hook
-							 (lambda ()
-								 (setq gc-cons-percentage 0.1)))
+     (use-package gcmh
+		  :diminish gcmh-mode
+		  :config
+		  (setq gcmh-idle-delay 5
+			gcmh-high-cons-threshold (* 16 1024 1024)) ;; this represets 16mb
+		  (gcmh-mode 1))
+     (add-hook 'emacs-startup-hook
+	       (lambda ()
+		 (setq gc-cons-percentage 0.1)))
 
-		 (add-hook 'emacs-startup-hook
-							 (lambda ()
-								 (message "Emacs ready in %s with %d garbage collections."
-													(format "%.2f seconds"
-																	(float-time
-																	 (time-subtract after-init-time before-init-time)))
-													gcs-done)))
-		 (fset 'yes-or-no-p 'y-or-n-p)
-		 (setq confirm-kill-emacs 'yes-or-no-p)
-		 (setq frame-resize-pixelwise t)
-		 (setq window-resize-pixelwise nil)
-		 (setq-default truncate-lines t)
-		 (setq-default tab-width 2)
-		 (setq-default fill-column 80)
+     (add-hook 'emacs-startup-hook
+	       (lambda ()
+		 (message "Emacs ready in %s with %d garbage collections."
+			  (format "%.2f seconds"
+				  (float-time
+				   (time-subtract after-init-time before-init-time)))
+			  gcs-done)))
+     (fset 'yes-or-no-p 'y-or-n-p)
+     (setq confirm-kill-emacs 'yes-or-no-p)
+     (setq frame-resize-pixelwise t)
+     (setq window-resize-pixelwise nil)
+     (setq-default truncate-lines t)
+     (setq-default tab-width 2)
+     (setq-default fill-column 80)
 
-		 ;; configure path
-		 (when (memq window-system '(mac ns x))
-			 (exec-path-from-shell-initialize))
+     ;; configure path
+     (when (memq window-system '(mac ns x))
+	     (exec-path-from-shell-initialize))
    #+end_src
 
 	 #+RESULTS:
-	 : ((MANPATH) (PATH . /home/harun/.config/nvim/lua-language-server/bin:/home/harun/.nvm/versions/node/v14.18.2/bin:/home/harun/.config/nvim/lua-language-server/bin:/home/harun/.cargo/bin:/usr/share/archcraft/scripts:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/harun/.config/bspwm/bin))
+	 : ((MANPATH . /Users/hsheikhali/.nvm/versions/node/v14.18.1/share/man:/usr/share/man:/usr/local/share/man:/usr/local/MacGPG2/share/man:/opt/X11/share/man) (PATH . /Users/hsheikhali/.nvm/versions/node/v14.18.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/go/bin:/usr/local/MacGPG2/bin:/opt/X11/bin:/Users/hsheikhali/.nvm/versions/node/v14.18.1/bin:/Users/hsheikhali/.fig/bin:/Users/hsheikhali/.antigen/bundles/robbyrussell/oh-my-zsh/lib:/Users/hsheikhali/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/git:/Users/hsheikhali/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/command-not-found:/Users/hsheikhali/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/docker:/Users/hsheikhali/.antigen/bundles/zsh-users/zsh-completions:/Users/hsheikhali/.antigen/bundles/zsh-users/zsh-autosuggestions:/Users/hsheikhali/.antigen/bundles/zsh-users/zsh-syntax-highlighting:/Users/hsheikhali/.antigen/bundles/jeffreytse/zsh-vi-mode:/Users/hsheikhali/go/bin:/Users/hsheikhali/go/bin:/usr/local/go/bin))
    
 ** Font configuration
    #+begin_src emacs-lisp
 		 ;;(set-face-attribute 'default nil :font "Fira Code" :height runemacs/default-font-size)
 		 ;;(set-face-attribute 'fixed-pitch nil :font "Fira Code" :height 260)
 
-		 (set-face-attribute 'default nil :font "JetBrains Mono" :height runemacs/default-font-size)
-		 (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height 150)
+		 (set-face-attribute 'default nil :font "Menlo" :height runemacs/default-font-size)
+		 (set-face-attribute 'fixed-pitch nil :font "Menlo" :height 150)
+
+		 ;;(set-face-attribute 'default nil :font "Iosevka" :weight 'medium :height runemacs/default-font-size)
+		 ;;(set-face-attribute 'fixed-pitch nil :font "Iosevka" :weight 'medium :height 150)
    #+end_src
 
 	 #+RESULTS:
@@ -125,7 +136,7 @@
    #+end_src
 
 	 #+RESULTS:
-	 : t
+   : t
    
 ** Evil related packages
    Evil mode is something that is required to use this config.. or else its just annoying..
@@ -181,25 +192,37 @@
    #+end_src
 
 	 #+RESULTS:
-	 : t
+   : t
+
+** Projectile
+   #+begin_src emacs-lisp
+		 (use-package projectile)
+		 (projectile-mode 1)
+		 (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+		 (setq projectile-project-search-path '("~/.dev/" "~/.personal/"))
+	 #+end_src
+
+   #+RESULTS:
+	 | ~/.dev/ | ~/.personal/ |
 
 ** Helm configuration
 	 #+begin_src emacs-lisp
 		 (use-package helm
-			:ensure
-			:config
-				(require 'helm-config))
+			 :ensure
+			 :config
+			 (require 'helm-config))
 
-			;; re-map some global bindings to be helm
-			(global-set-key (kbd "M-x") #'helm-M-x)
-			(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-			(global-set-key (kbd "C-x C-f") #'helm-find-files)
+		 ;; re-map some global bindings to be helm
+		 (global-set-key (kbd "M-x") #'helm-M-x)
+		 (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+		 (global-set-key (kbd "C-x C-f") #'helm-find-files)
 
-			(helm-mode 1)
+		 (helm-mode 1)
+
 	 #+end_src
 
 	 #+RESULTS:
-	 : t
+   : t
 
 ** Theming and making emacs look good
 	 #+begin_src emacs-lisp
@@ -225,7 +248,7 @@
 	 #+end_src
 
 	 #+RESULTS:
-	 : t
+   : t
 
 ** Company configuration
 	 In order to take full advantage of company mode, it's best to couple it with general
@@ -245,6 +268,8 @@
 				:keymaps 'override
 				:prefix ","
 				"f" '(helm-find-files :which-key "find files")
+				"p" '(projectile--find-file :whick-key "Find files in the current project")
+				"s" '(projectile-switch-project :which-key "Switch project")
 				"b" '(helm-buffers-list :which-key "Show active buffers")))
 
 		 (use-package company
@@ -270,7 +295,7 @@
 						 company-debbrev-downcase nil)
 			 :config
 			 (setq company-idle-delay 0.35)
-						 (company-tng-mode))
+			 (company-tng-mode))
 	 #+end_src
 
 	 #+RESULTS:
@@ -278,45 +303,56 @@
 ** Development configuration
 	 This section will contain the majority of configuration needed for modern web development (HTML, TS, React, etc)
 		#+begin_src emacs-lisp
-      (setq indent-tabs-mode nil)
-      (defun harun/webmode-hook ()
-        "My personal webmode hook"
-        (setq web-mode-markup-indent-offset 2)
-        (setq web-mode-enable-comment-annotations t)
-        (setq web-mode-code-indent-offset 2)
-        (setq web-mode-css-indent-offset 2)
-        (setq web-mode-attr-indent-offset 0)
-        (setq web-mode-enable-auto-indentation t)
-        (setq web-mode-enable-auto-pairing t)
-        (setq web-mode-enable-auto-closing t)
-        (setq web-mode-enable-css-colorization t))
+			(setq indent-tabs-mode nil)
+			(defun harun/webmode-hook ()
+				"My personal webmode hook"
+				(setq web-mode-markup-indent-offset 2)
+				(setq web-mode-enable-comment-annotations t)
+				(setq web-mode-code-indent-offset 2)
+				(setq web-mode-css-indent-offset 2)
+				(setq web-mode-attr-indent-offset 0)
+				(setq web-mode-enable-auto-indentation t)
+				(setq web-mode-enable-auto-pairing t)
+				(setq web-mode-enable-auto-closing t)
+				(setq web-mode-enable-css-colorization t)
+				(highlight-indent-guides-mode))
 
-      ;; TODO -- Add other web mode hook configs
-      ;; TODO -- Add other language support like react, eslint etc
+			;; TODO -- Add other web mode hook configs
+			;; TODO -- Add other language support like react, eslint etc
 
 
-      (use-package web-mode
-        :hook (web-mode . harun/webmode-hook)
-        :commands web-mode
-        :mode (("\\.tsx?'". web-mode)
-               ("\\.html\\'" . web-mode)))
+			(use-package web-mode
+				:hook (
+							 (web-mode . harun/webmode-hook)
+							 (web-mode . lsp)
+							 (css-mode . lsp)
+							 (scss-mode . lsp)
+							 )
+				:commands (web-mode)
+				:mode (("\\.tsx\\'" . web-mode)
+							 ("\\.html\\'" . web-mode)))
 
-      (use-package lsp-mode
-        :commands (lsp lsp-deferred))
+			(use-package lsp-mode
+				:commands (lsp lsp-deferred))
 
-      (use-package typescript-mode
-        :hook (typescript-mode . lsp))
+			(use-package typescript-mode
+				:hook (
+							 (typescript-mode . lsp)
+							 (typescript-mode . highlight-indent-guides-mode)
+							 )
+				:config
+				(setq-default typescript-indent-level 2))
 
-      (use-package flycheck)
-      (add-hook 'after-init-hook #'global-flycheck-mode)
+			(use-package flycheck)
+			(add-hook 'after-init-hook #'global-flycheck-mode)
 
-      ;; disable tslint because it is deprecated and no one uses it anyway..
-      (setq-default flycheck-disabled-checkers
-                    (append flycheck-disabled-checkers
-                            '(typescript-tslint)))
-      (flycheck-add-mode 'javascript-eslint 'web-mode)
-      (flycheck-add-mode 'javascript-eslint 'typescript-mode)
-      (setq-default flycheck-temp-prefix ".flycheck")
+			;; disable tslint because it is deprecated and no one uses it anyway..
+			(setq-default flycheck-disabled-checkers
+										(append flycheck-disabled-checkers
+														'(typescript-tslint)))
+			(flycheck-add-mode 'javascript-eslint 'web-mode)
+			(flycheck-add-mode 'javascript-eslint 'typescript-mode)
+			(setq-default flycheck-temp-prefix ".flycheck")
 		#+end_src
 
     #+RESULTS:
@@ -324,9 +360,13 @@
 		
 ** Org Mode
 	 #+begin_src emacs-lisp
+		 (use-package org-bullets
+			 :after org
+			 :hook (org-mode . org-bullets-mode))
+
 		 (use-package org-superstar
 			 :after org
-			 :hook (org-mode . org-superstar-mode)
+			 ;;:hook (org-mode . org-superstar-mode)
 			 :config
 			 (set-face-attribute 'org-superstar-header-bullet nil :inherit 'fixed-pitched :height 180)
 			 :custom
@@ -346,7 +386,9 @@
 			 (org-superstar-special-todo-items t)
 			 (org-superstar-leading-bullet "")
 			 )
+
 		#+end_src
 
     #+RESULTS:
-    | org-superstar-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
+		: t
+		
